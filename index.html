@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Quilt Show — natural programming, on camera</title>
+<meta name="description" content="Light, witty, not-a-pitch educational episodes about natural programming in the Quilt reactive system. Every claim matches the runtime canon.">
+<style>
+  :root {
+    --abyss: #06121a;
+    --deep:  #0a1c26;
+    --panel: #0e2430;
+    --ink:   #e9f2ef;
+    --dim:   #9db8b2;
+    --bio:   #4fd8c9;   /* bioluminescent teal */
+    --amber: #f0a500;   /* the fuel drop */
+    --coral: #ff6b5e;
+    --line:  #1d3a46;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--abyss);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.6;
+  }
+  a { color: var(--bio); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--bio); }
+  code, .mono { font-family: var(--mono); font-size: 0.9em; }
+  .wrap { max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ————— hero ————— */
+  header.hero {
+    padding: 5rem 0 3.5rem;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% -10%, #0f2e3a 0%, transparent 60%),
+      var(--abyss);
+    border-bottom: 1px solid var(--line);
+  }
+  .crab { width: 64px; height: 64px; margin-bottom: 1.25rem; }
+  .kicker {
+    font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.22em;
+    color: var(--bio); text-transform: uppercase; margin-bottom: 0.9rem;
+  }
+  h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 600; letter-spacing: -0.01em; }
+  h1 .q { color: var(--bio); }
+  .lede { margin-top: 1rem; max-width: 42rem; color: var(--dim); font-size: 1.08rem; }
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  /* ————— sections ————— */
+  section { padding: 3.25rem 0; border-bottom: 1px solid var(--line); }
+  h2 {
+    font-size: 1.35rem; font-weight: 600; margin-bottom: 1.5rem;
+    display: flex; align-items: baseline; gap: 0.75rem;
+  }
+  h2 .n { font-family: var(--mono); font-size: 0.8rem; color: var(--amber); }
+
+  /* ————— episode cards ————— */
+  .eps { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+  .card {
+    background: var(--deep); border: 1px solid var(--line); border-radius: 10px;
+    padding: 1.4rem 1.4rem 1.2rem; display: flex; flex-direction: column; gap: 0.6rem;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .card:hover { border-color: var(--bio); transform: translateY(-2px); }
+  .card .ep-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--dim); letter-spacing: 0.12em; }
+  .card h3 { font-size: 1.15rem; font-weight: 600; }
+  .card h3 a { color: var(--ink); }
+  .card h3 a:hover { border-bottom-color: var(--ink); }
+  .card p { color: var(--dim); font-size: 0.94rem; flex: 1; }
+  .card .meta { font-family: var(--mono); font-size: 0.74rem; color: var(--bio); }
+  .card.tbd { opacity: 0.62; border-style: dashed; }
+  .card.tbd:hover { transform: none; border-color: var(--line); }
+  .card .badge {
+    align-self: flex-start; font-family: var(--mono); font-size: 0.68rem;
+    padding: 0.15rem 0.5rem; border-radius: 99px;
+    background: rgba(79, 216, 201, 0.12); color: var(--bio); border: 1px solid rgba(79,216,201,0.35);
+  }
+
+  /* ————— trust ————— */
+  .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.1rem; }
+  .stat .v { font-family: var(--mono); font-size: 1.45rem; color: var(--bio); }
+  .stat .k { font-size: 0.8rem; color: var(--dim); margin-top: 0.2rem; }
+  .receipt {
+    font-family: var(--mono); font-size: 0.82rem; color: var(--amber);
+    background: var(--deep); border: 1px solid var(--line); border-radius: 8px;
+    padding: 0.85rem 1rem; overflow-x: auto; white-space: nowrap;
+  }
+  .honest { margin-top: 1.25rem; font-size: 0.92rem; color: var(--dim); border-left: 3px solid var(--amber); padding-left: 1rem; }
+  .honest b { color: var(--ink); }
+
+  /* ————— run ————— */
+  .run { background: var(--deep); border: 1px solid var(--line); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+  .run .why { font-size: 0.9rem; color: var(--dim); margin-bottom: 0.55rem; }
+  .run .why b { color: var(--ink); }
+  pre {
+    font-family: var(--mono); font-size: 0.83rem; color: var(--ink);
+    background: var(--abyss); border: 1px solid var(--line); border-radius: 6px;
+    padding: 0.75rem 0.9rem; overflow-x: auto;
+  }
+  pre .c { color: var(--dim); }
+
+  /* ————— constitution ————— */
+  .laws { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+  .law { background: var(--deep); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.15rem; font-size: 0.93rem; color: var(--dim); }
+  .law b { color: var(--ink); display: block; margin-bottom: 0.3rem; }
+  .banned { font-family: var(--mono); font-size: 0.8rem; color: var(--coral); }
+
+  footer { padding: 2rem 0 3rem; color: var(--dim); font-size: 0.85rem; }
+  footer .mono { color: var(--bio); }
+  @media (max-width: 40rem) { header.hero { padding: 3rem 0 2.5rem; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="crab" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <!-- hermit crab, three claws, one line weight — Moebius contour style -->
+      <path d="M12 44 Q10 30 22 24 Q34 18 44 26 Q52 33 50 44" stroke="#4fd8c9" stroke-width="2" stroke-linecap="round"/>
+      <path d="M18 44 Q18 52 26 53 L42 53 Q50 52 50 44" stroke="#4fd8c9" stroke-width="2" stroke-linecap="round"/>
+      <path d="M22 44 Q22 36 30 35" stroke="#f0a500" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="46" cy="38" r="2.4" stroke="#ff6b5e" stroke-width="2"/>
+      <path d="M8 40 Q4 36 8 32 M56 40 Q60 36 56 32" stroke="#4fd8c9" stroke-width="2" stroke-linecap="round"/>
+      <path d="M30 53 L29 58 M36 53 L37 58" stroke="#4fd8c9" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="kicker">SuperInstance · natural programming</div>
+    <h1>The <span class="q">Quilt</span> Show</h1>
+    <p class="lede">Light, witty, <b>not-a-pitch</b> educational episodes about natural
+    programming in the Quilt reactive system. A hermit crab with three claws
+    (<b>kimi1</b>) builds working programs cell by cell, <i>with</i> an agent, on camera.
+    Every claim matches the runtime canon —
+    <a href="https://github.com/SuperInstance/quilt"><code>SuperInstance/quilt</code></a>
+    <code>packages/core</code>.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">01</span> Episodes</h2>
+    <div class="eps">
+      <div class="card">
+        <span class="ep-tag">E1 · ~70s voice</span>
+        <h3><a href="episode-1/index.html">A Cell Learns It Is Alive</a></h3>
+        <p>A value, a formula, a listener. The agent places three cells and pulls the
+        trigger — you watch the chain fire with an honest event payload
+        <code>{changed, prev, current}</code>, and follow a gallon of fuel from tank to exhaust.</p>
+        <span class="meta">value / formula / listener · abstraction zoom, live · fuel-drop tracer</span>
+        <span class="badge">▶ watch</span>
+      </div>
+      <div class="card">
+        <span class="ep-tag">E2 · with voice + narrator</span>
+        <h3><a href="episode-2/index.html">The Receipt</a></h3>
+        <p>Double-entry fuel ledger, hash-chained witness, and pull-seeds-the-graph
+        receipts — why a cell's books should balance the way a ship's do.</p>
+        <span class="meta">double-entry · hash-chained witness · pull receipts</span>
+        <span class="badge">▶ watch</span>
+      </div>
+      <div class="card">
+        <span class="ep-tag">E3 · waveform episode</span>
+        <h3><a href="episode-3/index.html">Inter-cellular-relational-calculus</a></h3>
+        <p>The flow as a waveform you can shape — stream vs threshold vs shape.
+        Born from a measurement, not a mood: a live-oracle driftwatch study showed
+        shape beating threshold by 8 samples. Drag-to-reshape leaves receipts.</p>
+        <span class="meta">stream / threshold / shape · drag-to-reshape receipts</span>
+        <span class="badge">▶ watch · claim-verified ↓</span>
+      </div>
+      <div class="card tbd">
+        <span class="ep-tag">E4 · in the lab</span>
+        <h3>Building an Agent with an Agent</h3>
+        <p>A bigger sheet built live, cell by cell, with critique. Scheduled; not shipped.</p>
+        <span class="meta">live build · critique loop</span>
+        <span class="badge" style="background:transparent;border-color:var(--line);color:var(--dim)">in production</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">02</span> Every claim is measured, then shipped</h2>
+    <p style="color:var(--dim);max-width:44rem;margin-bottom:1.5rem">
+      The episode is the documentation. Episode 3's script is mapped claim-by-claim to
+      receipt evidence from its own simulator — the verification record lives at
+      <a href="docs/E3-VERIFICATION.md"><code>docs/E3-VERIFICATION.md</code></a>, and the
+      smoke test re-runs the chain:</p>
+    <div class="trust-grid">
+      <div class="stat"><div class="v">9/9</div><div class="k">smoke checks PASS<br>(<code>node episode-3/smoke.mjs</code>)</div></div>
+      <div class="stat"><div class="v">5</div><div class="k">receipts in the chain,<br>fnv1a hash-chained, unbroken</div></div>
+      <div class="stat"><div class="v">8</div><div class="k">samples shape beat<br>the static threshold by</div></div>
+      <div class="stat"><div class="v">6</div><div class="k">script/sim tick delta,<br>pinned as smoke check 4</div></div>
+    </div>
+    <div class="receipt">genesis → ⟨8a4845af⟩&nbsp;&nbsp;·&nbsp;&nbsp;⟨4c8825ee⟩ t16 threshold CROSS&nbsp;&nbsp;·&nbsp;&nbsp;⟨ade2f7a3⟩ t10 shape SLOPE&nbsp;&nbsp;·&nbsp;&nbsp;⟨03193ac5⟩ t17 EXIT&nbsp;&nbsp;·&nbsp;&nbsp;⟨4d9dfecb⟩ RESHAPED&nbsp;&nbsp;·&nbsp;&nbsp;⟨8a4845af⟩ t18 ENTER</div>
+    <p class="honest"><b>Honest notes, kept honest:</b> S2's "nothing to report" scopes to the
+    threshold watcher (the shape listener fires at t10, and says so). S5 compresses the
+    t17 EXIT into "dips back into the band" — the EXIT receipt exists and is replay-verifiable.
+    The script says "six ticks"; the live study measured eight. Both numbers are kept side by side.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">03</span> Run it yourself</h2>
+    <div class="run">
+      <p class="why"><b>Watch E1.</b> Static files, no build, no dependencies.</p>
+      <pre>cd episode-1 && python3 -m http.server 8000   <span class="c"># open http://localhost:8000</span></pre>
+    </div>
+    <div class="run">
+      <p class="why"><b>The agent from the episode, standalone.</b> ~50 lines, comments cite the canon files.</p>
+      <pre>node agent/cellmate.mjs</pre>
+    </div>
+    <div class="run">
+      <p class="why"><b>Re-verify E3's receipt chain.</b> The source of truth the verification record cites.</p>
+      <pre>node episode-3/smoke.mjs   <span class="c"># expect: 9/9 PASS, genesis → ⟨8a4845af⟩</span></pre>
+    </div>
+    <div class="run">
+      <p class="why"><b>Regenerate media</b> (Cloudflare Workers AI — <code>@cf/deepgram/aura-1</code> TTS,
+      <code>@cf/stabilityai/sdxl</code>; verified API shapes 2026-09-25, idempotent script):</p>
+      <pre>export CF_API_TOKEN=…
+bash tools/genmedia.sh</pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">04</span> Series constitution</h2>
+    <div class="laws">
+      <div class="law"><b>Canon or it didn't happen</b>
+        Every technical claim must match <code>quilt/packages/core</code> source — cite the file.</div>
+      <div class="law"><b>Wit with humility</b>
+        Light, concrete, self-deprecating. Jokes about the crab, never about other tools.</div>
+      <div class="law"><b>The video is the documentation</b>
+        If the video and the README disagree, fix the video.</div>
+      <div class="law"><b>Banned words</b>
+        <span class="banned">revolutionary · game-changer · seamless · "AI-powered" as a personality</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><span class="mono">The Quilt Show</span> · media CC-BY-4.0 · canon
+    <a href="https://github.com/SuperInstance/quilt"><span class="mono">SuperInstance/quilt</span></a> ·
+    built cell by cell, with an agent, on camera.</p>
+  </div>
+</footer>
+
+</body>
+</html>
