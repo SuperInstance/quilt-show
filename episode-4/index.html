@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quilt Show — E4: The Instruments</title>
+<style>
+  :root{ --abyss:#0a1418; --panel:#10222a; --ink:#d8e6e4; --dim:#7fa3a0;
+         --teal:#39d3c0; --amber:#ffb347; --line:#1e3a42; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--abyss);color:var(--ink);font:15px/1.55 ui-monospace,Menlo,monospace}
+  #stage{display:grid;grid-template-columns:1fr 400px;height:100vh}
+  #floor{position:relative} canvas{display:block;width:100%;height:100%}
+  #panel{border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-height:0}
+  #essay{padding:14px 18px;border-bottom:1px solid var(--line)}
+  #essay h1{font-size:1.05rem;margin:0 0 6px;color:var(--teal);letter-spacing:1px}
+  #essay p{margin:4px 0;font-size:.83rem;color:var(--dim)}
+  #essay .thesis{color:var(--ink)}
+  #tabs{display:flex;gap:2px;padding:8px 10px 0}
+  #tabs button{flex:1;background:transparent;border:1px solid var(--line);border-bottom:none;color:var(--dim);
+    font:inherit;font-size:.72rem;letter-spacing:2px;padding:7px 0;cursor:pointer;text-transform:uppercase}
+  #tabs button.on{color:var(--teal);border-color:var(--teal);background:rgba(57,211,192,.06)}
+  #view{flex:1;position:relative;min-height:0;border-top:1px solid var(--line)}
+  #view canvas{position:absolute;inset:0}
+  pre{position:absolute;inset:0;margin:0;padding:14px 16px;overflow:auto;font-size:.78rem;color:var(--dim);white-space:pre-wrap}
+  .k{color:var(--teal)} .a{color:var(--amber)}
+  #ctrl{position:absolute;left:12px;bottom:12px;background:rgba(16,34,42,.85);border:1px solid var(--line);
+    padding:8px 12px;font-size:.75rem;display:flex;gap:10px;align-items:center}
+  #ctrl input[type=range]{width:150px;accent-color:var(--teal)}
+  #ctrl button{background:transparent;border:1px solid var(--amber);color:var(--amber);font:inherit;
+    font-size:.7rem;padding:4px 10px;cursor:pointer;letter-spacing:1px}
+  #foot{padding:8px 18px;border-top:1px solid var(--line);font-size:.68rem;color:var(--dim);display:flex;gap:14px;flex-wrap:wrap}
+  #foot a{color:var(--teal);text-decoration:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="floor"><canvas id="floorCv"></canvas>
+    <div id="ctrl">
+      θ <input id="theta" type="range" min="0" max="12" step="0.05" value="5">
+      <span id="thetaOut">5.00°</span>
+      <button id="pulse">pulse the graph</button>
+    </div>
+  </div>
+  <div id="panel">
+    <div id="essay">
+      <h1>E4 · THE INSTRUMENTS</h1>
+      <p class="thesis">A floor you can only walk is a rumor. Tonight we build what the
+      theory face holds to its own throat: an <span class="k">S-curve that answers to a
+      slider</span>, a <span class="k">scene graph that renders the kernel honestly</span>,
+      and a <span class="k">tuning fork with exact rationals</span> — every number on this
+      page proven by <code>episode-4/smoke.mjs</code> (14 checks, node-first, all green).</p>
+      <p>Measured, not recited: the commensuration comb is <em>silent below r≈3.4</em> on
+      this floor and wakes at r=5.5 — windows at 5.00° and 7.75°. And the tuning fork
+      corrects our own canon: π/(2φ) is not 4/13; it is <span class="a">133/137</span>,
+      −0.0037 cents. The instrument's job is to say so.</p>
+    </div>
+    <div id="tabs">
+      <button data-t="twist" class="on">twist</button>
+      <button data-t="scene">scene</button>
+      <button data-t="tune">tune</button>
+    </div>
+    <div id="view"><canvas id="viewCv"></canvas><pre id="readout" hidden></pre></div>
+    <div id="foot">
+      <span>engines: quilt-studio @ <a href="https://github.com/SuperInstance/quilt-studio/tree/52dfb8e">52dfb8e</a> (vendored, byte-identical)</span>
+      <span><a href="episode-3/index.html">← E3</a></span>
+      <span><a href="../index.html">the show</a></span>
+      <span><a href="https://github.com/SuperInstance/twist-engine">twist-engine</a></span>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { buildFloor, twistCurve, magicWindows, commensurateReadout, makeDemoKernel, seedDemoKernel } from './sim.mjs';
+import { RenderModel } from './view/render-model.mjs';
+import { CanvasRenderer } from './view/canvas-renderer.mjs';
+
+const $ = s => document.querySelector(s);
+const { tf } = buildFloor();
+const curve = twistCurve(tf, 0, 12, 0.05);
+const windows = magicWindows(curve);
+const comm = commensurateReadout();
+
+// ── floor canvas: points colored by S(θ) ────────────────────────────
+const fcv = $('#floorCv'), fx = fcv.getContext('2d');
+let theta = 5;
+function drawFloor() {
+  const W = fcv.width = fcv.clientWidth * devicePixelRatio;
+  const H = fcv.height = fcv.clientHeight * devicePixelRatio;
+  fx.fillStyle = '#0a1418'; fx.fillRect(0, 0, W, H);
+  const S = 1 - tf.curve(theta, theta + 0.001, 0.001)[0].R;
+  // registration color: teal (aligned) → amber (twisted)
+  const t = Math.min(1, S);
+  const [r, g, b] = [57 + t * (255 - 57), 211 - t * (211 - 179), 192 - t * (192 - 71)];
+  const cx = W / 2, cy = H / 2, scale = Math.min(W, H) / 12;
+  fx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},.8)`;
+  for (const p of tf.points) {
+    const x = cx + p.x * scale, y = cy + p.y * scale;
+    fx.fillRect(x, y, 2.2, 2.2);
+  }
+  fx.fillStyle = '#7fa3a0'; fx.font = '12px ui-monospace';
+  fx.fillText(`S(${theta.toFixed(2)}°) = ${S.toFixed(4)}   ·   ${tf.points.length} points`, 12, 20);
+}
+
+// ── twist tab: the S-curve with windows marked ──────────────────────
+const vcv = $('#viewCv'), vx = vcv.getContext('2d');
+function drawTwist() {
+  const W = vcv.width = vcv.clientWidth * devicePixelRatio;
+  const H = vcv.height = vcv.clientHeight * devicePixelRatio;
+  vx.fillStyle = '#0a1418'; vx.fillRect(0, 0, W, H);
+  const pad = 34, pw = W - pad * 2, ph = H - pad * 2;
+  vx.strokeStyle = '#1e3a42'; vx.strokeRect(pad, pad, pw, ph);
+  vx.strokeStyle = '#39d3c0'; vx.beginPath();
+  curve.forEach((p, i) => {
+    const x = pad + (p.theta / 12) * pw, y = pad + ph - p.S * ph;
+    i ? vx.lineTo(x, y) : vx.moveTo(x, y);
+  });
+  vx.stroke();
+  vx.fillStyle = '#ffb347';
+  for (const w of windows) {
+    const x = pad + (w.theta / 12) * pw, y = pad + ph - w.S * ph;
+    vx.beginPath(); vx.arc(x, y, 5, 0, 7); vx.fill();
+    vx.fillText(`${w.theta.toFixed(2)}°`, x + 8, y - 6);
+  }
+  vx.fillStyle = '#7fa3a0'; vx.font = '11px ui-monospace';
+  vx.fillText('S = 1 − R, 0–12°, measured on this floor (r=5.5)', pad, pad - 10);
+}
+
+// ── scene tab: render model over the demo kernel ────────────────────
+const kernel = seedDemoKernel(makeDemoKernel(), 8);
+const model = new RenderModel(kernel);
+const renderer = new CanvasRenderer(model, vcv);
+function layoutScene() {
+  const n = model.nodes.size; let i = 0;
+  for (const name of model.nodes.keys()) {
+    const a = (i++ / n) * Math.PI * 2;
+    renderer.place(name, 0.5 + 0.33 * Math.cos(a), 0.5 + 0.33 * Math.sin(a));
+  }
+}
+function enterScene() {
+  layoutScene();
+  renderer.start(); // self-pumping rAF: drains the model each frame
+}
+function leaveScene() { renderer.stop(); }
+
+// ── tune tab: exact rationals ───────────────────────────────────────
+function renderTune() {
+  $('#readout').hidden = false; vcv.style.display = 'none';
+  $('#readout').innerHTML =
+`<span class="k">the tuning fork (exact BigInt rationals)</span>
+
+π/(2φ) = ${comm.target.toFixed(9)}
+     ≈ <span class="a">${comm.rational}</span>  (${comm.rationalValue.toFixed(9)})
+error  = ${comm.error.toExponential(2)}
+cents  = ${comm.cents.toFixed(4)}
+
+<span class="k">canon correction</span>
+an earlier note claimed π/(2φ) = 4/13.
+4/13 = ${(4/13).toFixed(4)} — wrong by 3×.
+the fork says: 133/137, two primes leaning on each other
+at a third of a millitone. measured, not recited.
+
+<span class="k">the comb vs the seat (measured sweep)</span>
+r=0.7  →  11 points, silent
+r=1.3  →  41 points, silent
+r=2.1  → 105 points, silent
+r=3.4  → 281 points, <span class="a">8.40°</span> (p=0.023)
+r=5.5  → 731 points, <span class="a">5.00°</span> (p=0.019), <span class="a">7.75°</span> (p=0.006)
+
+the floor sings only when the law is seated wide.`;
+}
+
+// ── tab switching + slider + pulse ──────────────────────────────────
+let tab = 'twist';
+function show() {
+  $('#readout').hidden = true; vcv.style.display = 'block';
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
+  leaveScene();
+  if (tab === 'twist') drawTwist();
+  if (tab === 'scene') enterScene();
+  if (tab === 'tune') renderTune();
+}
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => { tab = b.dataset.t; show(); });
+$('#theta').oninput = e => { theta = +e.target.value; $('#thetaOut').textContent = theta.toFixed(2) + '°'; drawFloor(); };
+$('#pulse').onclick = () => {
+  const n = 8, i = (Math.random() * n) | 0;
+  kernel.set(`cell.${i}`, +(Math.random() * 10).toFixed(3)); // renderer's own loop surfaces it
+};
+
+function frame() { drawFloor(); requestAnimationFrame(frame); }
+show(); requestAnimationFrame(frame);
+</script>
+</body>
+</html>
