@@ -58,7 +58,7 @@ bash tools/genmedia.sh
 | Ep | Title | Teaches |
 |----|-------|---------|
 | 1 ✅ | A Cell Learns It Is Alive | value / formula / listener, honest prev, fuel tracer, explainer feedback |
-| 2 | The Receipt | double-entry ledger + witness receipts — every change leaves proof |
+| 2 ✅ | The Receipt | double-entry fuel ledger, hash-chained witness, pull-seeds-the-graph receipts |
 | 3 | Inter-cellular-relational-calculus | the flow as a waveform you can shape |
 | 4 | Building an Agent with an Agent | a bigger sheet built live, cell by cell, with critique |
 
