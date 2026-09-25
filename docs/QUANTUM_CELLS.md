@@ -37,6 +37,34 @@ status on `CellValue`). A quantum cell adds three states:
   WAL replays the *observations*, not the generator. Determinism where it
   matters, nondeterminism where it pays.
 
+## Empirical update (2026-09-25, z-lab S3 — quilt-tools PR #4, commit 7c7a84a)
+
+The sheet-level version of this contract now has **live receipts**: S3 ran a
+quantum-tided budget against the real MothQuantum `coin-toss-v1` backend
+(aer). The three states behaved exactly as sketched above, as *sheet cells*:
+
+- **PENDING**: the appeal envelope opens with money unmoved; the cell refuses
+  all reads of its outcome until the quantum job resolves (202→poll→result).
+- **ENTANGLED**: the budget cell and the appeal cell are correlated by
+  construction — one receipt names both when the appeal is granted.
+- **COLLAPSED**: `heads` produced a *witnessed override* — the refusal was
+  real, the override is real, and the receipt chain pins the sampled value so
+  replay reproduces the observation, not the generator.
+- **Hard debt refuses absolutely** — no appeal cell can be constructed; the
+  contract is enforced by the sheet's shape, not by prompt discipline.
+
+Notable discipline beat: the appeal-invariant was originally prose-only and a
+pin caught it (10/11); fixed as a *sheet cell*, 11/11. The contract is
+self-checking when the invariants are cells.
+
+## What S3 proves and what it doesn't
+
+Proven: the three-state contract is expressible and witnessable on today's
+engine with zero engine changes — the enum stays classical while the *sheet*
+carries the quantum semantics. Not yet proven: native PENDING reads (engine
+blocking/sampling policy), correlated collapse across nodes, and the replay
+guarantee under WAL truncation. Those three are the engine-level PR, ranked.
+
 ## The honest cost
 
 Reads of PENDING cells need a policy (block / sample / raise) — that policy is
