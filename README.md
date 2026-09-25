@@ -59,8 +59,16 @@ bash tools/genmedia.sh
 |----|-------|---------|
 | 1 ✅ | A Cell Learns It Is Alive | value / formula / listener, honest prev, fuel tracer, explainer feedback |
 | 2 ✅ | The Receipt | double-entry fuel ledger, hash-chained witness, pull-seeds-the-graph receipts |
-| 3 | Inter-cellular-relational-calculus | the flow as a waveform you can shape |
+| 3 ✅ | Inter-cellular-relational-calculus | the flow as a waveform you can shape — stream vs threshold vs shape, drag-to-reshape receipts |
 | 4 | Building an Agent with an Agent | a bigger sheet built live, cell by cell, with critique |
+
+**E3 exists because of a measurement, not a mood.** z-lab S2 (SuperInstance/quilt-tools
+PR #3) ran driftwatch against a live jev-1.13.0 oracle across 30 calls: on slow drift
+the oracle credited the 0.80 static threshold even where shape flagged 8 samples
+earlier (st02: shape@10 vs naive@18). "Shape beats threshold" is not prompt-visible —
+so E3 demonstrates it with receipts: shape@tick10, threshold@tick16, every hop
+fnv1a-chained, and the viewer's own drag reshaping the threshold into a band
+leaves a def-change receipt too. `node episode-3/smoke.mjs` re-verifies the chain.
 
 ## Accuracy & tone rules (series constitution)
 
