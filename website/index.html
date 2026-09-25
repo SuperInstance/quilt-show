@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quilt Instruments — what the floor can prove</title>
+<style>
+  :root{ --abyss:#06121a; --deep:#0a1c26; --panel:#0e2430; --ink:#e9f2ef; --dim:#9db8b2;
+         --bio:#4fd8c9; --amber:#f0a500; --line:#1d3a46;
+         --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+         --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--abyss);color:var(--ink);font-family:var(--serif);line-height:1.6}
+  a{color:var(--bio);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover{border-bottom-color:var(--bio)}
+  header{padding:9vh 8vw 5vh;border-bottom:1px solid var(--line)}
+  .kick{font-family:var(--mono);font-size:.72rem;letter-spacing:.35em;color:var(--bio);text-transform:uppercase}
+  h1{font-size:clamp(1.9rem,4.5vw,3.2rem);margin:.4em 0 .3em;font-weight:600}
+  .sub{color:var(--dim);max-width:46em;font-size:1.02rem}
+  main{padding:5vh 8vw;display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px 24px}
+  .card h2{font-size:1.12rem;margin:.2em 0 .5em}
+  .card .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.25em;color:var(--amber);text-transform:uppercase}
+  .card p{color:var(--dim);font-size:.92rem}
+  .card .measured{margin-top:12px;font-family:var(--mono);font-size:.78rem;color:var(--ink);
+    background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:10px 12px;white-space:pre-wrap}
+  .links{margin-top:12px;font-family:var(--mono);font-size:.8rem;display:flex;gap:16px;flex-wrap:wrap}
+  footer{padding:4vh 8vw;border-top:1px solid var(--line);font-family:var(--mono);
+    font-size:.72rem;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">the quilt show · episode 4</div>
+  <h1>The Instruments</h1>
+  <p class="sub">A floor you can only walk is a rumor. These three instruments hold the
+  theory face to its own throat — and they report what they measure even when it
+  contradicts the canon. Every number below is pinned by
+  <a href="https://github.com/SuperInstance/quilt-show/blob/main/episode-4/smoke.mjs"><code>episode-4/smoke.mjs</code></a>
+  (14 checks, node-first, all green) on engines vendored byte-identical from
+  <a href="https://github.com/SuperInstance/quilt-studio">quilt-studio</a> @ 52dfb8e.</p>
+</header>
+
+<main>
+  <div class="card">
+    <div class="tag">instrument 01</div>
+    <h2>The Twist Field</h2>
+    <p>twist-engine's registration law seated on the Penrose floor: S = 1 − R, one
+    definition for curve and ledger. A slider sweeps θ; the floor re-colors by S;
+    magic windows mark themselves.</p>
+    <div class="measured">r=5.5 → 731 points · windows 5.00° (p=.019), 7.75° (p=.006)
+below r≈3.4 the comb is silent — the seat wakes the floor.</div>
+    <div class="links"><a href="../episode-4/index.html">open the instrument →</a>
+      <a href="https://github.com/SuperInstance/quilt-studio/blob/main/packages/quilt-floor/src/twistfield.mjs">engine</a></div>
+  </div>
+
+  <div class="card">
+    <div class="tag">instrument 02</div>
+    <h2>The Render Model</h2>
+    <p>Kernel subscription → retained scene graph → per-frame diffs, same input → same
+    frames on every substrate. The canvas is a thin skin; everything testable lives
+    headless. Late-attach re-syncs, departures included.</p>
+    <div class="measured">6 cells seeded · late-attach sees all · tick→changed ·
+unbind→removed · deterministic replay</div>
+    <div class="links"><a href="../episode-4/index.html">open the instrument →</a>
+      <a href="https://github.com/SuperInstance/quilt-studio/tree/main/packages/quilt-view">engine</a></div>
+  </div>
+
+  <div class="card">
+    <div class="tag">instrument 03</div>
+    <h2>The Tuning Fork</h2>
+    <p>Exact BigInt rationals. Stern–Brocot walks find the simplest commensurate —
+    and correct the fleet when its memory drifts.</p>
+    <div class="measured">π/(2φ) = 0.970805920…
+     ≠ 4/13   (an old note was wrong — 3× off)
+  = 133/137 = 0.970802919…  (−0.0037 cents)</div>
+    <div class="links"><a href="../episode-4/index.html">open the instrument →</a>
+      <a href="https://github.com/SuperInstance/quilt-studio/blob/main/packages/quilt-floor/src/commensurate.mjs">engine</a></div>
+  </div>
+</main>
+
+<footer>
+  <span>canon: measured &gt; recited</span>
+  <span><a href="../index.html">the show</a></span>
+  <span><a href="https://github.com/SuperInstance/twist-engine">twist-engine</a></span>
+  <span><a href="https://github.com/SuperInstance/quilt-studio">quilt-studio</a></span>
+</footer>
+</body>
+</html>
