@@ -44,6 +44,11 @@ receipt chain `genesis → ⟨8a4845af⟩` (5 receipts, fnv1a hash chain, unbrok
   than an assertion.
 - **Citation location in-repo:** `episode-3/sim.mjs` header ("Why this episode
   exists — z-lab S2 (quilt-tools PR #3)").
-- **Status:** CANDIDATE — per the fleet weight law, an edge is VERIFIED only
-  when a merged PR in the *target* repo carries the citation. This PR is the
-  carrying artifact; merge upgrades the edge to VERIFIED=1.0.
+- **Status:** **VERIFIED=1.0** — this PR (merge `a2f82a35`, merged
+  2026-09-25T19:14:08Z) IS the carrying artifact in the target repo, so per
+  the fleet weight law the edge quilt-show → quilt-tools S2 driftwatch is
+  now verified. Recorded in the mesh ledger at
+  `SuperInstance/quilt-tools` `experiments/REFERRAL_GRAPH.md` (PR #8,
+  branch `verified-edge-s2-ep2`); quilt-show PR #3 (ep4-instruments,
+  merged 21:30Z) re-cites the same technique. The view moved: quilt-show
+  87.5% · quilt-arcade 8.3% · quilt-tools 4.2%.
